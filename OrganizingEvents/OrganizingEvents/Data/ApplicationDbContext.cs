@@ -20,6 +20,8 @@ namespace OrganizingEvents.Data
 
         public DbSet<Staff> Staff { get; set; }
 
+        public DbSet<RestaurantTypes> RestaurantTypes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
