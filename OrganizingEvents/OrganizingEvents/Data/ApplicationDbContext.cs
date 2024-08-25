@@ -14,7 +14,9 @@ namespace OrganizingEvents.Data
 
         public DbSet<EventThemes> EventThemes { get; set; }
 
-       
+        public DbSet<User> User { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
