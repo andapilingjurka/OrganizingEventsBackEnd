@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrganizingEvents.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
