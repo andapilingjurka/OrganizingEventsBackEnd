@@ -16,7 +16,9 @@ namespace OrganizingEvents.Data
 
         public DbSet<User> User { get; set; }
 
+        public DbSet<Contact> Contact { get; set; }
 
+        public DbSet<Staff> Staff { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
