@@ -11,6 +11,7 @@ namespace OrganizingEvents.Data
 
         public DbSet<EventCategories> EventCategories { get; set; }
 
+        public DbSet<EventThemes> EventThemes { get; set; }
 
     }
 }
