@@ -68,5 +68,55 @@ namespace OrganizingEvents.Controllers
             await _db.SaveChangesAsync();
             return Created($"/GetEventsById/{events.Id}", events);
         }
+
+
+        //Update
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> PutAsync(Events events)
+        {
+            // Kontrollo nëse EventThemes ekziston
+            var existingEventThemes = await _db.EventThemes.FindAsync(events.ThemeId);
+            if (existingEventThemes == null)
+            {
+                return NotFound($"EventThemes me ID {events.ThemeId} nuk ekziston.");
+            }
+
+            // Kontrollo nëse EventCategories ekziston
+            var existingEventCategories = await _db.EventCategories.FindAsync(events.CategoryId);
+            if (existingEventCategories == null)
+            {
+                return NotFound($"EventCategories me ID {events.CategoryId} nuk ekziston.");
+            }
+
+            events.EventThemes = existingEventThemes;
+            events.EventCategories = existingEventCategories;
+
+            _db.Events.Update(events);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        //Delete
+        [Route("Delete")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync(int Id)
+        {
+            var eventsIdDelete = await _db.Events
+                .Include(q => q.EventThemes)
+                .Include(q => q.EventCategories)
+                .FirstOrDefaultAsync(q => q.Id == Id);
+
+            if (eventsIdDelete == null)
+            {
+                return NotFound();
+            }
+
+            _db.Events.Remove(eventsIdDelete);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
+
