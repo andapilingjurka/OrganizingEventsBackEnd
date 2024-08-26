@@ -45,5 +45,33 @@ namespace OrganizingEvents.Controllers
             await _db.SaveChangesAsync();
             return Created($"/GetEventCategoriesById/{category.Id}", category);
         }
+
+
+        //Update
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> PutAsync(EventCategories categories)
+        {
+            _db.EventCategories.Update(categories);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        //Delete
+        [Route("Delete")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync(int Id)
+        {
+            var eventcategoriesIdDelete = await _db.EventCategories.FindAsync(Id);
+            if (eventcategoriesIdDelete == null)
+            {
+                return NotFound();
+            }
+            _db.EventCategories.Remove(eventcategoriesIdDelete);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }
