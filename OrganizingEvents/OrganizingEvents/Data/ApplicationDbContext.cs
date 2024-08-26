@@ -9,10 +9,11 @@ namespace OrganizingEvents.Data
           : base(options)
         { }
 
-        public DbSet<Events> Events { get; set; }
         public DbSet<EventCategories> EventCategories { get; set; }
 
         public DbSet<EventThemes> EventThemes { get; set; }
+
+        public DbSet<Events> Events { get; set; }
 
         public DbSet<User> User { get; set; }
 
