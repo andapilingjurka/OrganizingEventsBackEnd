@@ -50,7 +50,7 @@ namespace OrganizingEvents.Controllers
 
         //Update
         [HttpPut]
-        [Route("Update")]
+        [Route("Update/{id}")]
         public async Task<IActionResult> PutAsync(EventThemes themes)
         {
             _db.EventThemes.Update(themes);
