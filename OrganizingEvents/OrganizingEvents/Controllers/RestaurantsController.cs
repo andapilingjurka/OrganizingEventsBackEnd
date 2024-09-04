@@ -102,6 +102,53 @@ namespace OrganizingEvents.Controllers
             await _restaurants.InsertOneAsync(restaurant);
             return CreatedAtRoute("GetRestaurants", new { id = restaurant.Id }, restaurant);
         }
+        // Update
+        [HttpPut("Update/{id:length(24)}")]
+        public async Task<IActionResult> UpdateAsync(string id, Restaurants updatedRestaurant)
+        {
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
 
+            var filter = Builders<Restaurants>.Filter.Eq("_id", objectId);
+            var existingRestaurant = await _restaurants.Find(filter).FirstOrDefaultAsync();
+
+            if (existingRestaurant == null)
+            {
+                return NotFound($"Restaurant with ID '{id}' not found.");
+            }
+
+            // Update the existing restaurant with the data from updatedRestaurant
+            existingRestaurant.Name = updatedRestaurant.Name;
+            existingRestaurant.Location = updatedRestaurant.Location;
+            existingRestaurant.Image = updatedRestaurant.Image;
+            existingRestaurant.Description = updatedRestaurant.Description;
+            existingRestaurant.RestaurantTypesId = updatedRestaurant.RestaurantTypesId;
+
+            await _restaurants.ReplaceOneAsync(filter, existingRestaurant);
+            return NoContent();
+        }
+
+        // Delete
+        [HttpDelete("Delete/{id:length(24)}")]
+        public async Task<IActionResult> DeleteAsync(string id)
+        {
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
+
+            var filter = Builders<Restaurants>.Filter.Eq("_id", objectId);
+            var existingRestaurant = await _restaurants.Find(filter).FirstOrDefaultAsync();
+
+            if (existingRestaurant == null)
+            {
+                return NotFound($"Restaurant with ID '{id}' not found.");
+            }
+
+            await _restaurants.DeleteOneAsync(filter);
+            return NoContent();
+        }
     }
 }
