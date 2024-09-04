@@ -14,7 +14,7 @@ namespace OrganizingEvents.Controllers
 
         public RestaurantTypesController(IMongoClient client)
         {
-            var database = client.GetDatabase("OrganizingEventsTest");
+            var database = client.GetDatabase("OrganizingEvents");
             _restaurantTypes = database.GetCollection<RestaurantTypes>("RestaurantTypes");
         }
 
