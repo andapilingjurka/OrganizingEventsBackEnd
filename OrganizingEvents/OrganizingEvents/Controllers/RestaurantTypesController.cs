@@ -53,5 +53,62 @@ namespace OrganizingEvents.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        //Put
+        [HttpPut("Update/{id:length(24)}")]
+        public IActionResult Update(string id, RestaurantTypes updatedRestaurantTypes)
+        {
+            try
+            {
+                if (!ObjectId.TryParse(id, out ObjectId objectId))
+                {
+                    return BadRequest("ID nuk është në formatin e duhur.");
+                }
+
+                var filter = Builders<RestaurantTypes>.Filter.Eq("_id", objectId);
+                var restaurant = _restaurantTypes.Find(filter).FirstOrDefault();
+
+                if (restaurant == null)
+                {
+                    return NotFound();
+                }
+
+                _restaurantTypes.ReplaceOne(filter, updatedRestaurantTypes);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        //Delete
+        [HttpDelete("Delete/{id:length(24)}")]
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                if (!ObjectId.TryParse(id, out ObjectId objectId))
+                {
+                    return BadRequest("ID nuk është në formatin e duhur.");
+                }
+
+                var filter = Builders<RestaurantTypes>.Filter.Eq("_id", objectId);
+                var restaurant = _restaurantTypes.Find(filter).FirstOrDefault();
+
+                if (restaurant == null)
+                {
+                    return NotFound();
+                }
+
+                _restaurantTypes.DeleteOne(filter);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
