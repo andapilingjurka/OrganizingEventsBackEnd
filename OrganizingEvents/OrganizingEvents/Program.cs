@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using OrganizingEvents.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// MongoDB ConnectionString
+var mongoConnectionString = "mongodb://localhost:27017";
+builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
 
 
 //SQL ConnenctionString
