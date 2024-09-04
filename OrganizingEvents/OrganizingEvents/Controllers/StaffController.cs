@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrganizingEvents.Data;
 using OrganizingEvents.Models;
-using System.Threading.Tasks;
+
 
 namespace OrganizingEvents.Controllers
 {
@@ -17,88 +17,62 @@ namespace OrganizingEvents.Controllers
             _db = db;
         }
 
-        // ListAll
+        //ListAll
         [HttpGet]
-        [Route("GetAllStaff")]
+        [Route("GetAllList")]
         public async Task<IActionResult> GetAsync()
         {
             var staff = await _db.Staff.ToListAsync();
             return Ok(staff);
         }
 
-        // GetById
+
+        //GetById
         [HttpGet]
-        [Route("GetStaffById/{id}")]
-        public async Task<IActionResult> GetStaffByIdAsync(int id)
+        [Route("GetStaffById")]
+        public async Task<IActionResult> GetStaffByIdAsync(int Id)
         {
-            var staffMember = await _db.Staff.FirstOrDefaultAsync(s => s.Id == id);
-            if (staffMember == null)
-            {
-                return NotFound();
-            }
-            return Ok(staffMember);
+            var staff = await _db.Staff.FindAsync(Id);
+            return Ok(staff);
         }
 
-        // Add
+
+        //Add
         [HttpPost]
         [Route("Add")]
         public async Task<IActionResult> PostAsync(Staff staff)
         {
             _db.Staff.Add(staff);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetStaffByIdAsync), new { id = staff.Id }, staff);
+            return Created($"/GetStaffById/{staff.Id}", staff);
         }
 
-        // Update
+
+        //Update
         [HttpPut]
         [Route("Update/{id}")]
-        public async Task<IActionResult> PutAsync(int id, Staff staff)
+        public async Task<IActionResult> PutAsync(Staff staff)
         {
-            if (id != staff.Id)
-            {
-                return BadRequest();
-            }
-
-            _db.Entry(staff).State = EntityState.Modified;
-
-            try
-            {
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StaffExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // Delete
-        [HttpDelete]
-        [Route("Delete/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            var staffMember = await _db.Staff.FindAsync(id);
-            if (staffMember == null)
-            {
-                return NotFound();
-            }
-
-            _db.Staff.Remove(staffMember);
+            _db.Staff.Update(staff);
             await _db.SaveChangesAsync();
             return NoContent();
         }
 
-        private bool StaffExists(int id)
+        //Delete
+        [Route("Delete")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync(int Id)
         {
-            return _db.Staff.Any(e => e.Id == id);
+            var staffIdDelete = await _db.Staff.FindAsync(Id);
+            if (staffIdDelete == null)
+            {
+                return NotFound();
+            }
+            _db.Staff.Remove(staffIdDelete);
+            await _db.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
+
+
