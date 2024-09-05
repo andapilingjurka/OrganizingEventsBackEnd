@@ -21,7 +21,7 @@ namespace OrganizingEvents.Data
 
         public DbSet<Staff> Staff { get; set; }
 
-
+        public DbSet<Roles> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
