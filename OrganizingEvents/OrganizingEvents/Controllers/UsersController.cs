@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using OrganizingEvents.Data;
+using OrganizingEvents.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OrganizingEvents.Data;
-using OrganizingEvents.Models;
-
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 namespace OrganizingEvents.Controllers
 {
     [Route("api/[controller]")]
@@ -64,5 +67,34 @@ namespace OrganizingEvents.Controllers
             await _db.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register(User objUser)
+        {
+            var dbuser = _db.User.Where(u=>u.Email == objUser.Email).FirstOrDefault();
+            if(dbuser != null)
+            {
+                return BadRequest("Emaili ekziston");
+            }
+
+            var exisstingState = await _db.Roles.FindAsync(objUser.RoleId);
+            if(exisstingState == null)
+            {
+                return NotFound($"Roli me ID {objUser.Role.Id} nuk ekziston");
+            }
+
+            objUser.Role = exisstingState;
+            objUser.RefreshTokenExpiryTime = objUser.RefreshTokenExpiryTime ?? DateTime.UtcNow;
+
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(objUser.Password, salt);
+
+            objUser.Password = hashedPassword; 
+            _db.User.Add(objUser);
+            await _db.SaveChangesAsync();
+            return Ok("Regjistrimi u shtua me sukses.");
+        }
+
     }
 }
