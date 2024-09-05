@@ -40,6 +40,12 @@ namespace OrganizingEvents.Data
            .HasForeignKey(p => p.CategoryId) //Foreign Key
            .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<User>()
+           .HasOne(p => p.Role)
+           .WithMany()
+           .HasForeignKey(p=>p.RoleId)
+           .OnDelete(DeleteBehavior.Restrict);
+
         }
 
     }
