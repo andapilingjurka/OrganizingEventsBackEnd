@@ -44,7 +44,7 @@ namespace OrganizingEvents.Data
 
             modelBuilder.Entity<User>()
            .HasOne(p => p.Role)
-           .WithMany(r=>r.Users)
+           .WithMany()
            .HasForeignKey(p=>p.RoleId)
            .OnDelete(DeleteBehavior.Restrict);
 

@@ -14,6 +14,7 @@ namespace OrganizingEvents.Models
         public Roles Role {  get; set; }
 
         public int RoleId { get; set; }
+        [ForeignKey("RoleId")]
 
         public string? RefreshToken { get; set; }
 
