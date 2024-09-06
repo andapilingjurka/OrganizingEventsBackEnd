@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OrganizingEvents.Data;
 
@@ -11,9 +12,11 @@ using OrganizingEvents.Data;
 namespace OrganizingEvents.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240906140503_RemovingForeignKeyRoleId")]
+    partial class RemovingForeignKeyRoleId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,38 +120,6 @@ namespace OrganizingEvents.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("OrganizingEvents.Models.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EventsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventsId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Feedback");
-                });
-
             modelBuilder.Entity("OrganizingEvents.Models.Roles", b =>
                 {
                     b.Property<int>("Id")
@@ -225,9 +196,14 @@ namespace OrganizingEvents.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RolesId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("RolesId");
 
                     b.ToTable("User");
                 });
@@ -251,32 +227,17 @@ namespace OrganizingEvents.Migrations
                     b.Navigation("EventThemes");
                 });
 
-            modelBuilder.Entity("OrganizingEvents.Models.Feedback", b =>
-                {
-                    b.HasOne("OrganizingEvents.Models.Events", "Events")
-                        .WithMany()
-                        .HasForeignKey("EventsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("OrganizingEvents.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Events");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OrganizingEvents.Models.User", b =>
                 {
                     b.HasOne("OrganizingEvents.Models.Roles", "Role")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("OrganizingEvents.Models.Roles", null)
+                        .WithMany("Users")
+                        .HasForeignKey("RolesId");
 
                     b.Navigation("Role");
                 });

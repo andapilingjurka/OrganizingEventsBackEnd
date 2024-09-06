@@ -15,8 +15,6 @@ namespace OrganizingEvents.Models
 
         public int RoleId { get; set; }
 
-        [ForeignKey("RoleId")]
-
         public string? RefreshToken { get; set; }
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
