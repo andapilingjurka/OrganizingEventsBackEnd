@@ -73,7 +73,12 @@ namespace OrganizingEvents.Data
            .HasForeignKey(p => p.EventID)
            .OnDelete(DeleteBehavior.Restrict);
 
-
+            modelBuilder.Entity<Reservations>()
+            .Property(r => r.ReservationDate)
+            .HasConversion(
+            v => v.ToDateTime(new TimeOnly()),  // Konverto DateOnly në DateTime
+            v => DateOnly.FromDateTime(v)       // Konverto DateTime në DateOnly
+            );
         }
 
     }

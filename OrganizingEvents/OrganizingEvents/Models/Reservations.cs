@@ -10,7 +10,7 @@ namespace OrganizingEvents.Models
 
         public string Name { get; set; }
         public string Surname { get; set; }
-        public DateTime ReservationDate { get; set; }
+        public DateOnly ReservationDate { get; set; }
         public double TotalPrice { get; set; }
         public int UserID { get; set; }
         public int EventID { get; set; }
