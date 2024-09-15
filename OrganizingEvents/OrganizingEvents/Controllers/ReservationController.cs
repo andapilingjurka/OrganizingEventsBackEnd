@@ -114,6 +114,8 @@ namespace OrganizingEvents.Controllers
 
 
         [HttpDelete]
+        [Route("DeleteReservation/{id}")]
+
         public async Task<IActionResult> DeleteAsync (int id)
         {
             var reservationToDelete = await _db.Reservations.FindAsync(id);
