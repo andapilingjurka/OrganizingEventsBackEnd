@@ -120,6 +120,26 @@ namespace OrganizingEvents.Controllers
             await _db.SaveChangesAsync();
             return NoContent();
         }
+
+
+        // Search Events by Name
+        [HttpGet("SearchEvent")]
+        public async Task<IActionResult> SearchEventAsync([FromQuery] string searchEvent)
+        {
+            if (string.IsNullOrEmpty(searchEvent))
+            {
+                return BadRequest("Search term cannot be empty.");
+            }
+
+            var events = await _db.Events
+                .Include(e => e.EventThemes)
+                .Include(e => e.EventCategories)
+                .Where(e => EF.Functions.Like(e.EventName, $"%{searchEvent}%"))
+                .ToListAsync();
+
+            return Ok(events);
+        }
+
     }
 }
 
