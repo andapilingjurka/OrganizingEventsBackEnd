@@ -140,6 +140,25 @@ namespace OrganizingEvents.Controllers
             return Ok(events);
         }
 
+
+        //Order Events by Price
+        [HttpGet("SortEvents")]
+        public async Task<IActionResult> SortEvents(string sortOrder)
+        {
+            var events = await _db.Events.ToListAsync();
+
+            if (sortOrder == "LowToHigh")
+            {
+                events = events.OrderBy(e => e.Price).ToList();
+            }
+            else if (sortOrder == "HighToLow")
+            {
+                events = events.OrderByDescending(e => e.Price).ToList();
+            }
+
+            return Ok(events);
+        }
+
     }
 }
 
