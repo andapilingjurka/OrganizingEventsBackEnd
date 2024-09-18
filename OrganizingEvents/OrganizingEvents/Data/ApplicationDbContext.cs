@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrganizingEvents.Models;
+using System.Data;
 
 namespace OrganizingEvents.Data
 {
@@ -75,6 +76,11 @@ namespace OrganizingEvents.Data
             v => DateOnly.FromDateTime(v)       // Konverto DateTime në DateOnly
             );
 
+            modelBuilder.Entity<Roles>().HasData(
+            new Roles { Id = 1, Name = "Super Admin"},
+            new Roles { Id = 2, Name = "MOD" },
+            new Roles { Id = 3, Name = "User" }
+            );
         }
 
     }
