@@ -23,8 +23,9 @@ namespace OrganizingEvents.Data
 
         public DbSet<Roles> Roles { get; set; }
 
-        public DbSet<Feedback> Feedback {  get; set; }
         public DbSet<Reservations> Reservations { get; set; }
+
+        public DbSet<Feedback> Feedback { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,15 +51,9 @@ namespace OrganizingEvents.Data
            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Feedback>()
-           .HasOne(p => p.User)
-           .WithMany()
-           .HasForeignKey(p => p.UserId) //Foreign Key
-           .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Feedback>()
            .HasOne(p => p.Events)
            .WithMany()
-           .HasForeignKey(p => p.EventsId) //Foreign Key
+           .HasForeignKey(p => p.EventsId)
            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Reservations>()
@@ -79,6 +74,7 @@ namespace OrganizingEvents.Data
             v => v.ToDateTime(new TimeOnly()),  // Konverto DateOnly në DateTime
             v => DateOnly.FromDateTime(v)       // Konverto DateTime në DateOnly
             );
+
         }
 
     }

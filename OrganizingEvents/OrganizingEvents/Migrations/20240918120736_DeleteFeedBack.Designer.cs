@@ -12,8 +12,8 @@ using OrganizingEvents.Data;
 namespace OrganizingEvents.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240905220228_Feedback")]
-    partial class Feedback
+    [Migration("20240918120736_DeleteFeedBack")]
+    partial class DeleteFeedBack
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,36 +120,39 @@ namespace OrganizingEvents.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("OrganizingEvents.Models.Feedback", b =>
+            modelBuilder.Entity("OrganizingEvents.Models.Reservations", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ReservationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationID"));
 
-                    b.Property<string>("Comment")
+                    b.Property<int>("EventID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EventsId")
+                    b.Property<string>("Surname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.HasKey("ReservationID");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasIndex("EventID");
 
-                    b.HasKey("Id");
+                    b.HasIndex("UserID");
 
-                    b.HasIndex("EventsId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Feedback");
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("OrganizingEvents.Models.Roles", b =>
@@ -228,14 +231,9 @@ namespace OrganizingEvents.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RolesId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("RolesId");
 
                     b.ToTable("User");
                 });
@@ -259,21 +257,21 @@ namespace OrganizingEvents.Migrations
                     b.Navigation("EventThemes");
                 });
 
-            modelBuilder.Entity("OrganizingEvents.Models.Feedback", b =>
+            modelBuilder.Entity("OrganizingEvents.Models.Reservations", b =>
                 {
-                    b.HasOne("OrganizingEvents.Models.Events", "Events")
+                    b.HasOne("OrganizingEvents.Models.Events", "Event")
                         .WithMany()
-                        .HasForeignKey("EventsId")
+                        .HasForeignKey("EventID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("OrganizingEvents.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Events");
+                    b.Navigation("Event");
 
                     b.Navigation("User");
                 });
@@ -286,16 +284,7 @@ namespace OrganizingEvents.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OrganizingEvents.Models.Roles", null)
-                        .WithMany("Users")
-                        .HasForeignKey("RolesId");
-
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("OrganizingEvents.Models.Roles", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
