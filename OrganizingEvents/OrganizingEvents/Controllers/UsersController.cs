@@ -132,7 +132,7 @@ namespace OrganizingEvents.Controllers
             userInDb.RefreshToken=tokens.RefreshToken;
             userInDb.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(1);
             await _db.SaveChangesAsync();
-
+             
             return Ok(new {
                 AccessToken = tokens.AccessToken,
                 RefreshToken = tokens.RefreshToken,
