@@ -28,6 +28,8 @@ namespace OrganizingEvents.Data
 
         public DbSet<Feedback> Feedback { get; set; }
 
+        public DbSet<Payment> Payment { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -75,6 +77,12 @@ namespace OrganizingEvents.Data
             v => v.ToDateTime(new TimeOnly()),  // Konverto DateOnly në DateTime
             v => DateOnly.FromDateTime(v)       // Konverto DateTime në DateOnly
             );
+
+            modelBuilder.Entity<Payment>()
+           .HasOne(p => p.Reservations)
+           .WithMany()
+           .HasForeignKey(p => p.ReservationId) //Foreign Key
+           .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Roles>().HasData(
             new Roles { Id = 1, Name = "Super Admin"},
