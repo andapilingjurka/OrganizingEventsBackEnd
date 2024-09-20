@@ -6,13 +6,12 @@ using OrganizingEvents.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OrganizingEvents;
-using Stripe;
+using Stripe; // Sigurohuni që kjo direktivë është e pranishme
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -22,14 +21,13 @@ builder.Services.AddSwaggerGen();
 var mongoConnectionString = "mongodb://localhost:27017";
 builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
 
-
-//SQL ConnenctionString
+// SQL ConnectionString
 builder.Services.AddDbContext<ApplicationDbContext>(
     options =>
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDBConnection"));
     }
-    );
+);
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -77,24 +75,18 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
-// Add Stripe configuration (Assuming you have an extension method for this)
-builder.Services.AddStripeInfrastructure(builder.Configuration);
-
-
-
 var app = builder.Build();
 
+// Inicializoni çelësin sekret të Stripe
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 // Configure CORS
 app.UseCors(policy => policy.AllowAnyHeader()
                                .AllowAnyMethod()
                                .SetIsOriginAllowed(origin => true)
                                .AllowCredentials()
+);
 
-                               );
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
