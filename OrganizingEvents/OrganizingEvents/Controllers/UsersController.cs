@@ -185,5 +185,16 @@ namespace OrganizingEvents.Controllers
 
             return Ok(new { AccessToken = newTokens.AccessToken, RefreshToken = newTokens.RefreshToken });
         }
+
+        [HttpGet]
+        [Route("ExportUsersToExcel")]
+        public async Task<IActionResult> ExportUsersToExcel()
+        {
+            var users = await _db.User.ToListAsync();
+
+            var excelFileContent = ExcelExporter.ExportToExcel(users);
+
+            return File(excelFileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Users.xlsx");
+        }
     }
 }
