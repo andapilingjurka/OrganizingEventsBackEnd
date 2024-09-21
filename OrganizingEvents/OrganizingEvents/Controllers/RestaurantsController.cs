@@ -174,6 +174,32 @@ namespace OrganizingEvents.Controllers
         }
 
 
+        [HttpGet("ExportRestaurantsToExcel")]
+        public async Task<IActionResult> ExportRestaurantsToExcel()
+        {
+            // Nxirr të gjitha restorantet
+            var restaurants = await _restaurants.Find(_ => true).ToListAsync();
+
+            // Nxirr të gjitha tipet e restoranteve për të bërë lidhjen me emrat
+            var restaurantTypeIds = restaurants.Select(r => r.RestaurantTypesId).Distinct().ToList();
+            var restaurantTypes = await _restaurantTypes.Find(rt => restaurantTypeIds.Contains(rt.Id)).ToListAsync();
+
+            var restaurantsWithTypes = restaurants.Select(r => new
+            {
+                r.Id,
+                r.Name,
+                r.Location,
+                r.Image,
+                r.Description,
+                RestaurantType = restaurantTypes.FirstOrDefault(rt => rt.Id == r.RestaurantTypesId)?.Name 
+            }).ToList();
+
+            var excelFileContent = ExcelExporter.ExportToExcel(restaurantsWithTypes);
+
+            return File(excelFileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Restaurants.xlsx");
+        }
+
+
 
     }
 }
