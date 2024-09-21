@@ -159,6 +159,35 @@ namespace OrganizingEvents.Controllers
             return Ok(events);
         }
 
+
+        [HttpGet]
+        [Route("ExportEventsToExcel")]
+        public async Task<IActionResult> ExportEventsToExcel()
+        {
+            // Merr të gjitha eventet bashkë me temat dhe kategoritë përkatëse
+            var events = await _db.Events
+                .Include(e => e.EventThemes)
+                .Include(e => e.EventCategories)
+                .ToListAsync();
+
+            // Transformo të dhënat për eksport
+            var eventsForExport = events.Select(e => new
+            {
+                EventId = e.Id,
+                EventName = e.EventName,
+                Description = e.Description,
+                Image = e.Image,
+                Price = e.Price,
+                EventTheme = e.EventThemes?.ThemeName, 
+                EventCategory = e.EventCategories?.CategoryName, 
+            }).ToList();
+
+            var excelFileContent = ExcelExporter.ExportToExcel(eventsForExport);
+
+            return File(excelFileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Events.xlsx");
+        }
+
+
     }
 }
 
