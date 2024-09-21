@@ -190,7 +190,21 @@ namespace OrganizingEvents.Controllers
         [Route("ExportUsersToExcel")]
         public async Task<IActionResult> ExportUsersToExcel()
         {
-            var users = await _db.User.ToListAsync();
+            // Merr të gjithë përdoruesit bashkë me rolet e tyre
+            var users = await _db.User
+                .Include(u => u.Role) 
+                .Select(u => new
+                {
+                    u.Id,
+                    u.FirstName,
+                    u.LastName,
+                    u.Email,
+                    u.Password,
+                    RoleName = u.Role.Name, 
+                    u.RefreshToken,
+                    u.RefreshTokenExpiryTime
+                })
+                .ToListAsync();
 
             var excelFileContent = ExcelExporter.ExportToExcel(users);
 
