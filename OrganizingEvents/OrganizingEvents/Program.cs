@@ -6,6 +6,7 @@ using OrganizingEvents.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OrganizingEvents;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
