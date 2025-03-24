@@ -6,12 +6,18 @@ using OrganizingEvents.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OrganizingEvents;
-using Stripe; // Sigurohuni që kjo direktivë është e pranishme
+using Stripe;
+using Microsoft.ML;// Sigurohuni që kjo direktivë është e pranishme
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers();
+
+MLContext context = new MLContext();
+context.ComponentCatalog.RegisterAssembly(typeof(SeasonMappingFactory).Assembly);
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
